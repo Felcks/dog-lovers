@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/dogs/domain" />
             <option value="$PROJECT_DIR$/dogs/domainImpl" />
             <option value="$PROJECT_DIR$/dogs/network" />
+            <option value="$PROJECT_DIR$/dogs/presentation" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

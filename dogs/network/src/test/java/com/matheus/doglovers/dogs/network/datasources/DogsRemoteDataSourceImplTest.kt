@@ -12,10 +12,12 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import okhttp3.ResponseBody
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
+import retrofit2.Response
 
 class DogsRemoteDataSourceImplTest {
 
@@ -58,16 +60,14 @@ class DogsRemoteDataSourceImplTest {
 
     @Test
     fun `GIVEN service returns error WHEN getBreeds THEN returns error`() = runTest {
-        val serviceResponse = null
-        coEvery { mockService.getBreeds() } returns mockk() {
-            every { body() } returns serviceResponse
-        }
+        coEvery { mockService.getBreeds() } throws Exception()
 
         val result = sut.getBreeds()
 
         result.test {
             awaitItem()
             assertThat(awaitItem(), instanceOf(Resource.Error::class.java))
+            awaitComplete()
         }
     }
 }
