@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.coroutines.test)
     implementation(libs.turbine)
 
+    implementation(libs.compose.coil)
+
     implementation(project(":core:presentation"))
     implementation(project(":core:domain"))
     implementation(project(":dogs:domain"))
