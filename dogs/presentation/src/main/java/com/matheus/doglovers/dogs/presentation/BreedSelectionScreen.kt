@@ -1,10 +1,12 @@
 package com.matheus.doglovers.dogs.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -14,7 +16,10 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -55,6 +61,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.matheus.doglovers.core.presentation.R
 import com.matheus.doglovers.core.presentation.theme.DogLoversTheme
+import com.matheus.doglovers.core.presentation.theme.Violet
 import com.matheus.doglovers.dogs.domain.models.Breed
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,20 +76,19 @@ fun BreedSelectionScreen(
         viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
     }
 
-
-
-    Scaffold() { innerPadding ->
+    Scaffold(modifier = modifier) { innerPadding ->
         Image(
             painter = painterResource(R.drawable.app_background),
             modifier = Modifier.fillMaxSize(),
             contentDescription = null,
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.FillBounds,
         )
 
         BreedSelectionScreenContent(
             uiState = uiState,
             loadAllBreeds = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds) },
             onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
+            onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelecteBreed) },
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -93,6 +99,7 @@ fun BreedSelectionScreenContent(
     uiState: BreedSelectionUIState,
     loadAllBreeds: () -> Unit,
     onBreedSelected: (Breed) -> Unit,
+    onShuffleClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -136,7 +143,7 @@ fun BreedSelectionScreenContent(
         }
 
         Card(
-            shape = RoundedCornerShape(32.dp),
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp, bottomStart = 0.dp, bottomEnd = 0.dp),
             colors = CardDefaults.cardColors().copy(
                 contentColor = Color.White,
                 containerColor = Color.White,
@@ -188,21 +195,57 @@ fun BreedSelectionScreenContent(
                             )
                             BreedSelectionDropDown(
                                 uiState.breeds!!,
+                                uiState.selectedBreed,
                                 onSelected = onBreedSelected::invoke,
                                 modifier = Modifier
                                     .padding(top = 4.dp)
                                     .fillMaxWidth()
                             )
 
+                            Spacer(modifier = Modifier.padding(top = 32.dp))
+
                             uiState.currentDog?.let {
                                 SubcomposeAsyncImage(
                                     model = it.imageUrl,
                                     contentDescription = it.breed.getVisualizationName(),
-                                    contentScale = ContentScale.FillBounds,
+                                    contentScale = ContentScale.Crop,
                                     modifier = Modifier
+                                        .padding(horizontal = 32.dp)
+                                        .fillMaxWidth()
+                                        .heightIn(max = 175.dp)
                                         .clip(CircleShape.copy(all = CornerSize(16.dp)))
-                                        .heightIn(min = 150.dp)
                                 )
+                            }
+
+                            Spacer(modifier = Modifier.padding(top = 32.dp))
+
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                Button(
+                                    onClick = onShuffleClick,
+                                    enabled = uiState.currentDog != null,
+                                    colors = ButtonDefaults.buttonColors()
+                                        .copy(
+                                            containerColor = MaterialTheme.colorScheme.primary
+                                        ),
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp)
+                                    ) {
+                                        Text(
+                                            stringResource(com.matheus.doglovers.dogs.presentation.R.string.dog_selection_screen_shuffle_button),
+                                            color = Color.White
+                                        )
+                                        Spacer(modifier = Modifier.padding(start = 8.dp))
+                                        Icon(
+                                            imageVector = ImageVector.vectorResource(com.matheus.doglovers.dogs.presentation.R.drawable.ic_update),
+                                            tint = Color.White,
+                                            contentDescription = null
+                                        )
+                                    }
+
+                                }
                             }
                         }
                     }
@@ -216,11 +259,12 @@ fun BreedSelectionScreenContent(
 @Composable
 fun BreedSelectionDropDown(
     breeds: List<Breed>,
+    selectedBreed: Breed?,
     onSelected: (Breed) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(breeds[0]) }
+    var selectedOption: Breed? by remember { mutableStateOf(selectedBreed) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -228,7 +272,8 @@ fun BreedSelectionDropDown(
         modifier = modifier
     ) {
         TextField(
-            value = selectedOption.getVisualizationName(),
+            value = selectedOption?.getVisualizationName().orEmpty(),
+            label = { Text(stringResource(com.matheus.doglovers.dogs.presentation.R.string.dog_selection_screen_breed_dropdown_label)) },
             onValueChange = {},
             readOnly = true,
             modifier = Modifier
@@ -276,6 +321,7 @@ private fun BreedSelectionScreenContentPreview() {
                 ),
             ),
             {},
+            {},
             {}
         )
     }
@@ -298,6 +344,7 @@ private fun BreedSelectionDropDownPreview() {
 
                 },
             ),
+            selectedBreed = null,
             onSelected = {},
             modifier = Modifier
         )

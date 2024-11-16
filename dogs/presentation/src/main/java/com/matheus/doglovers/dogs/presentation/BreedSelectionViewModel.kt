@@ -55,7 +55,7 @@ class BreedSelectionViewModel @Inject constructor(
                     is Resource.Error -> _uiState.value =
                         _uiState.value.copy(errorMessage = "Failed to load")
 
-                    Resource.Loading -> _uiState.value = _uiState.value.copy(loading = true)
+                    Resource.Loading -> _uiState.value = _uiState.value.copy(loading = true, currentDog = null)
                     is Resource.Success -> _uiState.value = _uiState.value.copy(loading = false, currentDog = it.data)
                 }
             }

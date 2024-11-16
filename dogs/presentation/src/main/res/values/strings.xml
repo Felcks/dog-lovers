@@ -2,4 +2,6 @@
 <resources>
     <string name="dog_selection_screen_title">Dog Selection</string>
     <string name="dog_selection_screen_breed_label">Dog breed</string>
+    <string name="dog_selection_screen_breed_dropdown_label">Select Dog breed from the list</string>
+    <string name="dog_selection_screen_shuffle_button">Shuffle</string>
 </resources>
