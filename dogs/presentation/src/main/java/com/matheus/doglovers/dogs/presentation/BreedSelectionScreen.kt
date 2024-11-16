@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.matheus.doglovers.core.presentation.R
 import com.matheus.doglovers.core.presentation.theme.DogLoversTheme
@@ -65,7 +66,7 @@ fun BreedSelectionScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
-        viewModel.handleScreenEvents(BreedSelectionEvent.loadBreeds)
+        viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
     }
 
 
@@ -80,7 +81,8 @@ fun BreedSelectionScreen(
 
         BreedSelectionScreenContent(
             uiState = uiState,
-            onBreedLoad = { viewModel.handleScreenEvents(BreedSelectionEvent.loadBreeds) },
+            loadAllBreeds = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds) },
+            onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -89,7 +91,8 @@ fun BreedSelectionScreen(
 @Composable
 fun BreedSelectionScreenContent(
     uiState: BreedSelectionUIState,
-    onBreedLoad: () -> Unit,
+    loadAllBreeds: () -> Unit,
+    onBreedSelected: (Breed) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -166,7 +169,7 @@ fun BreedSelectionScreenContent(
                                 fontSize = 18.sp
                             )
                             Box(modifier = Modifier.padding(vertical = 8.dp))
-                            Button(onClick = { onBreedLoad.invoke() }) {
+                            Button(onClick = { loadAllBreeds.invoke() }) {
                                 Text(stringResource(id = R.string.try_again))
                             }
                         }
@@ -174,31 +177,34 @@ fun BreedSelectionScreenContent(
 
 
                     uiState.breeds != null -> {
-                        Column(modifier = Modifier
-                            .padding(horizontal = 24.dp, vertical = 32.dp)
-                            .fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp, vertical = 32.dp)
+                                .fillMaxSize()
+                        ) {
                             Text(
                                 stringResource(com.matheus.doglovers.dogs.presentation.R.string.dog_selection_screen_breed_label),
                                 color = Color.Black
                             )
                             BreedSelectionDropDown(
                                 uiState.breeds!!,
-                                onSelected = {},
+                                onSelected = onBreedSelected::invoke,
                                 modifier = Modifier
                                     .padding(top = 4.dp)
                                     .fillMaxWidth()
                             )
 
-                            /*SubcomposeAsyncImage(
-                                model = pokemonSummary.image,
-                                contentDescription = pokemonSummary.name,
-                                contentScale = ContentScale.FillBounds,
-                                modifier = Modifier
-                                    .clip(CircleShape.copy(all = CornerSize(16.dp)))
-                                    .heightIn(min = 150.dp)
-                            )*/
+                            uiState.currentDog?.let {
+                                SubcomposeAsyncImage(
+                                    model = it.imageUrl,
+                                    contentDescription = it.breed.getVisualizationName(),
+                                    contentScale = ContentScale.FillBounds,
+                                    modifier = Modifier
+                                        .clip(CircleShape.copy(all = CornerSize(16.dp)))
+                                        .heightIn(min = 150.dp)
+                                )
+                            }
                         }
-
                     }
                 }
             }
@@ -222,10 +228,12 @@ fun BreedSelectionDropDown(
         modifier = modifier
     ) {
         TextField(
-            value = selectedOption.name,
+            value = selectedOption.getVisualizationName(),
             onValueChange = {},
             readOnly = true,
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
@@ -237,7 +245,7 @@ fun BreedSelectionDropDown(
         ) {
             breeds.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption.name) },
+                    text = { Text(selectionOption.getVisualizationName()) },
                     onClick = {
                         selectedOption = selectionOption
                         expanded = false
@@ -257,17 +265,17 @@ private fun BreedSelectionScreenContentPreview() {
             BreedSelectionUIState(
                 breeds = listOf(
                     object : Breed {
-                        override val name: String
-                            get() = "Breed 1"
+                        override val name: String = "Name"
+                        override val specification: String = "1"
 
                     },
                     object : Breed {
-                        override val name: String
-                            get() = "Breed 2"
-
+                        override val name: String = "Name"
+                        override val specification: String = "2"
                     },
                 ),
             ),
+            {},
             {}
         )
     }
@@ -280,13 +288,13 @@ private fun BreedSelectionDropDownPreview() {
         BreedSelectionDropDown(
             listOf(
                 object : Breed {
-                    override val name: String
-                        get() = "Breed 1"
+                    override val name: String = "Name"
+                    override val specification: String = "1"
 
                 },
                 object : Breed {
-                    override val name: String
-                        get() = "Breed 2"
+                    override val name: String = "Name"
+                    override val specification: String = "1"
 
                 },
             ),

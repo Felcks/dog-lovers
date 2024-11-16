@@ -1,7 +1,9 @@
 package com.matheus.doglovers.dogs.domainimpl.di
 
 import com.matheus.doglovers.dogs.domain.repositories.DogsRepository
+import com.matheus.doglovers.dogs.domain.usecases.GetRandomDogUseCase
 import com.matheus.doglovers.dogs.domain.usecases.ListBreedsUseCase
+import com.matheus.doglovers.dogs.domainimpl.usecases.GetRandomDogUseCaseImpl
 import com.matheus.doglovers.dogs.domainimpl.usecases.ListBreedsUseCaseImpl
 import dagger.Module
 import dagger.Provides
@@ -18,5 +20,13 @@ object UseCaseModule {
         dogsRepository: DogsRepository
     ): ListBreedsUseCase {
         return ListBreedsUseCaseImpl(dogsRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeRandomDogUseCase(
+        dogsRepository: DogsRepository
+    ): GetRandomDogUseCase {
+        return GetRandomDogUseCaseImpl(dogsRepository)
     }
 }

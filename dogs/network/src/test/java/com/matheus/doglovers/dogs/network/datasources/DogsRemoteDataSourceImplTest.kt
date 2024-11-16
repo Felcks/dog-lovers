@@ -12,12 +12,10 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import okhttp3.ResponseBody
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
-import retrofit2.Response
 
 class DogsRemoteDataSourceImplTest {
 
@@ -34,9 +32,9 @@ class DogsRemoteDataSourceImplTest {
     @Test
     fun `GIVEN service returns correctly WHEN getBreeds THEN returns breeds correctly`() = runTest {
         val expected = listOf<BreedResponse>(
-            BreedResponse("a"),
-            BreedResponse("1 b"),
-            BreedResponse("2 b")
+            BreedResponse("a", null),
+            BreedResponse("b", "1"),
+            BreedResponse("b", "2")
         )
 
         val serviceResponse = BreedsResponse(
