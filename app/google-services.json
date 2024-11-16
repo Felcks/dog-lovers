@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "559554690963",
+    "project_id": "dog-lovers-84c3c",
+    "storage_bucket": "dog-lovers-84c3c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559554690963:android:c25ac48304e07be4c53266",
+        "android_client_info": {
+          "package_name": "com.matheus.doglovers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2pvGQW2TTth879OajwfdsBdyyfHLKNcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

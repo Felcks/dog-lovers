@@ -4,8 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.matheus.doglovers.dogs.presentation.BreedSelectionRoute
+import com.matheus.doglovers.auth.presentation.AuthenticationRoute
+import com.matheus.doglovers.auth.presentation.authenticationScreen
+import com.matheus.doglovers.auth.presentation.navigateToAuthenticationScreen
 import com.matheus.doglovers.dogs.presentation.breedSelectionScreen
+import com.matheus.doglovers.dogs.presentation.navigateToBreedSelectionScreen
 
 @Composable
 fun DogsNavHost(modifier: Modifier = Modifier) {
@@ -13,9 +16,14 @@ fun DogsNavHost(modifier: Modifier = Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = BreedSelectionRoute,
+        startDestination = AuthenticationRoute,
         modifier = modifier
     ) {
-        breedSelectionScreen()
+        authenticationScreen(
+            onAuthenticationSuccessful = { navController.navigateToBreedSelectionScreen() }
+        )
+        breedSelectionScreen(
+            onLogout = { navController.navigateToAuthenticationScreen() }
+        )
     }
 }

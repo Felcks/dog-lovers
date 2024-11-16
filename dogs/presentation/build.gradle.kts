@@ -63,6 +63,10 @@ dependencies {
 
     implementation(libs.compose.coil)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.auth.ktx)
+
     implementation(project(":core:presentation"))
     implementation(project(":core:domain"))
     implementation(project(":dogs:domain"))

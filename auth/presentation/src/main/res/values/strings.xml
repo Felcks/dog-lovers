@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_sign_in_label">Sign in</string>
+    <string name="auth_email_label">Email</string>
+    <string name="auth_password_label">Password</string>
+    <string name="auth_email_placeholder_label">Please add your email</string>
+    <string name="auth_password_placeholder_label">Please add your password</string>
+</resources>

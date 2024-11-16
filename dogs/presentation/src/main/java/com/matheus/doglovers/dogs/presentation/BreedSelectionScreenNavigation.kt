@@ -13,10 +13,12 @@ fun NavController.navigateToBreedSelectionScreen(
     this.navigate(BreedSelectionRoute, navOptions)
 }
 
-fun NavGraphBuilder.breedSelectionScreen() {
+fun NavGraphBuilder.breedSelectionScreen(
+    onLogout: () -> Unit
+) {
     composable(
         BreedSelectionRoute
     ) {
-        BreedSelectionScreen()
+        BreedSelectionScreen(onLogout)
     }
 }

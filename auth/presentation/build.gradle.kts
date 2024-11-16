@@ -1,24 +1,20 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.matheus.doglovers"
-    compileSdk = 35
+    namespace = "com.matheus.doglovers.auth.presentation"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.matheus.doglovers"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -36,14 +32,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            merges += "META-INF/LICENSE.md"
-            merges += "META-INF/LICENSE-notice.md"
-        }
     }
 }
 
@@ -65,8 +53,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.androidx.navigation.compose)
-
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.work)
@@ -74,15 +60,17 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation(libs.mockk)
+    implementation(libs.coroutines.test)
+    implementation(libs.turbine)
+
+    implementation(libs.compose.coil)
+    implementation(libs.androidx.navigation.compose)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
 
     implementation(project(":core:domain"))
     implementation(project(":core:presentation"))
-    implementation(project(":auth:presentation"))
-    implementation(project(":dogs:domain"))
-    implementation(project(":dogs:domainImpl"))
-    implementation(project(":dogs:network"))
-    implementation(project(":dogs:presentation"))
 }

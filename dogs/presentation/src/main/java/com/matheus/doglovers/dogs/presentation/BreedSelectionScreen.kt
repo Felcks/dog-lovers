@@ -1,7 +1,6 @@
 package com.matheus.doglovers.dogs.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,12 +25,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,23 +56,29 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.matheus.doglovers.core.presentation.R
 import com.matheus.doglovers.core.presentation.theme.DogLoversTheme
-import com.matheus.doglovers.core.presentation.theme.Violet
 import com.matheus.doglovers.dogs.domain.models.Breed
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BreedSelectionScreen(
+    onLogout: () -> Unit,
     viewModel: BreedSelectionViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
-        viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
+        viewModel.handleScreenEvents(BreedSelectionEvent.CheckAuthState)
+    }
+
+    LaunchedEffect(uiState.user) {
+        if (uiState.user != null) {
+            viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
+        } else {
+            onLogout.invoke()
+        }
     }
 
     Scaffold(modifier = modifier) { innerPadding ->
@@ -89,6 +94,7 @@ fun BreedSelectionScreen(
             loadAllBreeds = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds) },
             onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
             onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelecteBreed) },
+            onSignoutClick = { viewModel.handleScreenEvents(BreedSelectionEvent.Signout) },
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -100,6 +106,7 @@ fun BreedSelectionScreenContent(
     loadAllBreeds: () -> Unit,
     onBreedSelected: (Breed) -> Unit,
     onShuffleClick: () -> Unit,
+    onSignoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -116,11 +123,15 @@ fun BreedSelectionScreenContent(
                 contentDescription = null,
                 tint = Color.White
             )
-            Icon(
-                imageVector = ImageVector.vectorResource(com.matheus.doglovers.dogs.presentation.R.drawable.ic_envelope),
-                tint = Color.White,
-                contentDescription = null
-            )
+            IconButton(
+                onClick = onSignoutClick
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_envelope),
+                    tint = Color.White,
+                    contentDescription = null
+                )
+            }
         }
         Row(
             modifier = Modifier
@@ -244,7 +255,6 @@ fun BreedSelectionScreenContent(
                                             contentDescription = null
                                         )
                                     }
-
                                 }
                             }
                         }
@@ -320,6 +330,7 @@ private fun BreedSelectionScreenContentPreview() {
                     },
                 ),
             ),
+            {},
             {},
             {},
             {}
