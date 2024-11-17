@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -115,16 +117,19 @@ fun BreedSelectionScreenContent(
     ) {
         Row(
             modifier = Modifier
-                .padding(20.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .height(24.dp)
                 .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
             )
             IconButton(
-                onClick = onSignoutClick
+                onClick = onSignoutClick,
+                modifier = Modifier.size(24.dp)
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_envelope),
@@ -135,7 +140,7 @@ fun BreedSelectionScreenContent(
         }
         Row(
             modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 24.dp)
+                .padding(horizontal = 20.dp, vertical = 20.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {

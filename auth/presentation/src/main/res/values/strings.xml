@@ -5,4 +5,6 @@
     <string name="auth_password_label">Password</string>
     <string name="auth_email_placeholder_label">Please add your email</string>
     <string name="auth_password_placeholder_label">Please add your password</string>
+    <string name="auth_unexpected_error">Unexpected Error, please Try Again</string>
+    <string name="auth_invalid_email_and_password">Email and password don\'t match</string>
 </resources>

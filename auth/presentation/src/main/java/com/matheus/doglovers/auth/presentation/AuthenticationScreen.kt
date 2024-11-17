@@ -1,12 +1,15 @@
 package com.matheus.doglovers.auth.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -30,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -61,6 +65,21 @@ fun AuthenticationScreen(
         }
     }
 
+    uiState.authenticationError?.let {
+        val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            val message = when(it) {
+                AuthenticationError.InvalidEmailAndPasswordCombination ->
+                    com.matheus.doglovers.auth.presentation.R.string.auth_invalid_email_and_password
+                AuthenticationError.UnexpectedError ->
+                    com.matheus.doglovers.auth.presentation.R.string.auth_unexpected_error
+            }
+
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     Scaffold(modifier = modifier) { innerPadding ->
         Image(
             painter = painterResource(R.drawable.app_background),
@@ -89,9 +108,16 @@ fun AuthenticationScreenContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .height(24.dp)
+                .fillMaxWidth(),
+        ){}
+
         Row(
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 24.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {
@@ -148,13 +174,13 @@ fun AuthenticationScreenContent(
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Button(
                     onClick = {
-                        onSignInClick.invoke("doglovers_testuser+01@gmail.com", "Login12345@@")
-                        //FirebaseAuthInvalidCredentialsException
+                        onSignInClick.invoke(email, password)
                     },
                     colors = ButtonDefaults.buttonColors()
                         .copy(
                             containerColor = MaterialTheme.colorScheme.primary
                         ),
+                    enabled = email.isNotEmpty() && password.isNotEmpty()
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
