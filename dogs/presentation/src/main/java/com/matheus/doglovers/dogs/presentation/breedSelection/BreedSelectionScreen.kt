@@ -63,22 +63,14 @@ import com.matheus.doglovers.dogs.domain.models.Breed
 
 @Composable
 fun BreedSelectionScreen(
-    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BreedSelectionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
-        viewModel.handleScreenEvents(BreedSelectionEvent.CheckAuthState)
-    }
 
-    LaunchedEffect(uiState.user) {
-        if (uiState.user != null) {
-            viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
-        } else {
-            onLogout.invoke()
-        }
+    LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
+        viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
     }
 
     BreedSelectionScreenContent(

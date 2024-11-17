@@ -15,12 +15,11 @@ fun NavController.navigateToBreedSelectionScreen(
 }
 
 fun NavGraphBuilder.breedSelectionScreen(
-    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     composable(
         BreedSelectionRoute
     ) {
-        BreedSelectionScreen(onLogout, modifier)
+        BreedSelectionScreen(modifier)
     }
 }

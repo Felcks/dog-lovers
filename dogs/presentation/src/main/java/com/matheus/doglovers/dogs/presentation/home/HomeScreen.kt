@@ -22,6 +22,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,11 +36,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.matheus.doglovers.core.presentation.TopLevelRoute
 import com.matheus.doglovers.dogs.presentation.R
+import com.matheus.doglovers.dogs.presentation.breedSelection.BreedSelectionEvent
 import com.matheus.doglovers.dogs.presentation.breedSelection.BreedSelectionRoute
+import com.matheus.doglovers.dogs.presentation.breedSelection.BreedSelectionViewModel
 import com.matheus.doglovers.dogs.presentation.breedSelection.breedSelectionScreen
 import com.matheus.doglovers.dogs.presentation.favoriteList.FavoriteScreenRoute
 import com.matheus.doglovers.dogs.presentation.favoriteList.favoriteListScreen
@@ -48,7 +56,8 @@ import okhttp3.internal.wait
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val topLevelRoutes = listOf(
         TopLevelRoute("Selection", BreedSelectionRoute, ImageVector.vectorResource(R.drawable.ic_dog)),
@@ -61,6 +70,19 @@ fun HomeScreen(
 
     val navController = rememberNavController()
 
+    val uiState by viewModel.uiState.collectAsState()
+
+    LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
+        viewModel.handleScreenEvents(HomeScreenEvent.CheckAuthState)
+    }
+
+    LaunchedEffect(uiState.user) {
+        if (uiState.user == null) {
+            onLogout.invoke()
+        }
+    }
+
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -70,7 +92,13 @@ fun HomeScreen(
                             selected = navigationSelectedItem == index,
                             onClick = {
                                 navigationSelectedItem = index
-                                navController.navigate(topLevelRoute.route)
+                                navController.navigate(topLevelRoute.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             },
                             icon = {
                                 Icon(topLevelRoute.icon, contentDescription = topLevelRoute.name)
@@ -104,15 +132,14 @@ fun HomeScreen(
                     .height(24.dp)
                     .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Spacer(Modifier)
-                /*Icon(
+                Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
-                )*/
+                )
                 IconButton(
-                    onClick = onLogout,
+                    onClick = { viewModel.handleScreenEvents(HomeScreenEvent.Signout) },
                     modifier = Modifier.size(24.dp)
                 ) {
                     Icon(
@@ -129,15 +156,10 @@ fun HomeScreen(
                 modifier = modifier.fillMaxSize()
             ) {
                 breedSelectionScreen(
-                    onLogout = { onLogout() },
                     modifier = Modifier.fillMaxSize()
                 )
-                favoriteListScreen(
-                    onLogout = { onLogout() }
-                )
+                favoriteListScreen()
             }
-
-            Text("aeiufhaifhaufhaufghb")
         }
     }
 }

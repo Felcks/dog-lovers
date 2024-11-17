@@ -13,9 +13,7 @@ fun NavController.navigateToFavoriteScreen(
     this.navigate(FavoriteScreenRoute, navOptions)
 }
 
-fun NavGraphBuilder.favoriteListScreen(
-    onLogout: () -> Unit
-) {
+fun NavGraphBuilder.favoriteListScreen() {
     composable(
         FavoriteScreenRoute
     ) {
