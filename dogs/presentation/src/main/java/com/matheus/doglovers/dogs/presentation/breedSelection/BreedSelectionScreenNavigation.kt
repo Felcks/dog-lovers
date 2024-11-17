@@ -1,5 +1,6 @@
-package com.matheus.doglovers.dogs.presentation
+package com.matheus.doglovers.dogs.presentation.breedSelection
 
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -14,11 +15,12 @@ fun NavController.navigateToBreedSelectionScreen(
 }
 
 fun NavGraphBuilder.breedSelectionScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     composable(
         BreedSelectionRoute
     ) {
-        BreedSelectionScreen(onLogout)
+        BreedSelectionScreen(onLogout, modifier)
     }
 }

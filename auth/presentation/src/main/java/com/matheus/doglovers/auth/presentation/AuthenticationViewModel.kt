@@ -1,6 +1,5 @@
 package com.matheus.doglovers.auth.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

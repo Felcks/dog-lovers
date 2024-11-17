@@ -7,8 +7,10 @@ import androidx.navigation.compose.rememberNavController
 import com.matheus.doglovers.auth.presentation.AuthenticationRoute
 import com.matheus.doglovers.auth.presentation.authenticationScreen
 import com.matheus.doglovers.auth.presentation.navigateToAuthenticationScreen
-import com.matheus.doglovers.dogs.presentation.breedSelectionScreen
-import com.matheus.doglovers.dogs.presentation.navigateToBreedSelectionScreen
+import com.matheus.doglovers.dogs.presentation.breedSelection.breedSelectionScreen
+import com.matheus.doglovers.dogs.presentation.breedSelection.navigateToBreedSelectionScreen
+import com.matheus.doglovers.dogs.presentation.home.homeScreen
+import com.matheus.doglovers.dogs.presentation.home.navigateToHomeScreen
 
 @Composable
 fun DogsNavHost(modifier: Modifier = Modifier) {
@@ -20,9 +22,12 @@ fun DogsNavHost(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         authenticationScreen(
-            onAuthenticationSuccessful = { navController.navigateToBreedSelectionScreen() }
+            onAuthenticationSuccessful = { navController.navigateToHomeScreen() }
         )
         breedSelectionScreen(
+            onLogout = { navController.navigateToAuthenticationScreen() }
+        )
+        homeScreen(
             onLogout = { navController.navigateToAuthenticationScreen() }
         )
     }

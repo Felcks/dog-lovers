@@ -1,6 +1,7 @@
-package com.matheus.doglovers.dogs.presentation
+package com.matheus.doglovers.dogs.presentation.breedSelection
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,8 +67,8 @@ import com.matheus.doglovers.dogs.domain.models.Breed
 @Composable
 fun BreedSelectionScreen(
     onLogout: () -> Unit,
-    viewModel: BreedSelectionViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: BreedSelectionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -83,23 +84,14 @@ fun BreedSelectionScreen(
         }
     }
 
-    Scaffold(modifier = modifier) { innerPadding ->
-        Image(
-            painter = painterResource(R.drawable.app_background),
-            modifier = Modifier.fillMaxSize(),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-        )
-
-        BreedSelectionScreenContent(
-            uiState = uiState,
-            loadAllBreeds = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds) },
-            onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
-            onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelecteBreed) },
-            onSignoutClick = { viewModel.handleScreenEvents(BreedSelectionEvent.Signout) },
-            modifier = Modifier.padding(innerPadding)
-        )
-    }
+    BreedSelectionScreenContent(
+        uiState = uiState,
+        loadAllBreeds = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds) },
+        onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
+        onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelecteBreed) },
+        onSignoutClick = { viewModel.handleScreenEvents(BreedSelectionEvent.Signout) },
+        modifier = modifier.background(Color.Transparent)
+    )
 }
 
 @Composable
@@ -115,29 +107,6 @@ fun BreedSelectionScreenContent(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Row(
-            modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
-                .height(24.dp)
-                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(24.dp)
-            )
-            IconButton(
-                onClick = onSignoutClick,
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_envelope),
-                    tint = Color.White,
-                    contentDescription = null
-                )
-            }
-        }
         Row(
             modifier = Modifier
                 .padding(horizontal = 20.dp, vertical = 20.dp)

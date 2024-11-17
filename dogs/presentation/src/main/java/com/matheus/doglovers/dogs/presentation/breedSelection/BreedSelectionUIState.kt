@@ -1,4 +1,4 @@
-package com.matheus.doglovers.dogs.presentation
+package com.matheus.doglovers.dogs.presentation.breedSelection
 
 import com.google.firebase.auth.FirebaseUser
 import com.matheus.doglovers.dogs.domain.models.Breed

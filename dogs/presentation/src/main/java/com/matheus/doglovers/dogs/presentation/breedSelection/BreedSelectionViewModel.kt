@@ -1,6 +1,5 @@
-package com.matheus.doglovers.dogs.presentation
+package com.matheus.doglovers.dogs.presentation.breedSelection
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
