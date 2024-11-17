@@ -19,6 +19,6 @@ fun NavGraphBuilder.favoriteListScreen(
     composable(
         FavoriteScreenRoute
     ) {
-        FavoriteListScreen(onLogout)
+        FavoriteListScreen()
     }
 }

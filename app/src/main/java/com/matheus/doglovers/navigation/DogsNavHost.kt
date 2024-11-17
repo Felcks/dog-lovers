@@ -24,9 +24,6 @@ fun DogsNavHost(modifier: Modifier = Modifier) {
         authenticationScreen(
             onAuthenticationSuccessful = { navController.navigateToHomeScreen() }
         )
-        breedSelectionScreen(
-            onLogout = { navController.navigateToAuthenticationScreen() }
-        )
         homeScreen(
             onLogout = { navController.navigateToAuthenticationScreen() }
         )
