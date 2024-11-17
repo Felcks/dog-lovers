@@ -41,16 +41,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import coil.compose.SubcomposeAsyncImage
+import com.google.firebase.auth.FirebaseUser
 import com.matheus.doglovers.core.presentation.R
 
 @Composable
 fun FavoriteListScreen(
+    firebaseUser: FirebaseUser,
     modifier: Modifier = Modifier,
     viewModel: FavoriteListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
+        viewModel.handleScreenEvents(FavoriteListEvent.SetUser(firebaseUser))
         viewModel.handleScreenEvents(FavoriteListEvent.LoadFavoriteDogs)
     }
 

@@ -2,9 +2,6 @@ package com.matheus.doglovers.dogs.presentation.breedSelection
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.matheus.doglovers.core.domain.wrapper.Resource
 import com.matheus.doglovers.dogs.domain.models.Breed
 import com.matheus.doglovers.dogs.domain.usecases.GetRandomDogUseCase
@@ -38,8 +35,9 @@ class BreedSelectionViewModel @Inject constructor(
                 loadRandomDogImage(event.breed)
             }
 
-            BreedSelectionEvent.ShuffleImageForSelecteBreed -> _uiState.value.selectedBreed?.let { loadRandomDogImage(it) }
+            BreedSelectionEvent.ShuffleImageForSelectedBreed -> _uiState.value.selectedBreed?.let { loadRandomDogImage(it) }
             BreedSelectionEvent.FavoriteOrUnfavoriteCurrentDog -> favOrUnfavCurrentDog()
+            is BreedSelectionEvent.SetUser -> _uiState.value = _uiState.value.copy(user = event.user)
         }
     }
 
@@ -73,11 +71,12 @@ class BreedSelectionViewModel @Inject constructor(
 
     private fun favOrUnfavCurrentDog() {
         viewModelScope.launch(Dispatchers.IO) {
+            val email = uiState.value.user?.email ?: return@launch
             uiState.value.currentDog?.let {
                val result = if(!it.isFavorite) {
-                    saveFavoriteDogUseCase.invoke(it).firstOrNull()
+                    saveFavoriteDogUseCase.invoke(it, email).firstOrNull()
                 } else {
-                    removeFavoriteDogUseCase.invoke(it).firstOrNull()
+                    removeFavoriteDogUseCase.invoke(it, email).firstOrNull()
                 }
 
                 if(result is Resource.Success) {

@@ -22,18 +22,21 @@ class FavoriteListViewModel @Inject constructor(
     fun handleScreenEvents(event: FavoriteListEvent) {
         when (event) {
             FavoriteListEvent.LoadFavoriteDogs -> loadFavoriteDogs()
+            is FavoriteListEvent.SetUser -> _uiState.value = _uiState.value.copy(user = event.user)
         }
     }
 
     private fun loadFavoriteDogs() {
         viewModelScope.launch(Dispatchers.IO) {
-            getFavoriteDogsUseCase.invoke().collect {
-                when (it) {
-                    is Resource.Error -> _uiState.value =
-                        _uiState.value.copy(loading = false, errorMessage = "Failed to load")
+            uiState.value.user?.email?.let {
+                getFavoriteDogsUseCase.invoke(it).collect { response ->
+                    when (response) {
+                        is Resource.Error -> _uiState.value =
+                            _uiState.value.copy(loading = false, errorMessage = "Failed to load")
 
-                    Resource.Loading -> _uiState.value = _uiState.value.copy(loading = true)
-                    is Resource.Success -> _uiState.value = _uiState.value.copy(loading = false, dogs = it.data)
+                        Resource.Loading -> _uiState.value = _uiState.value.copy(loading = true)
+                        is Resource.Success -> _uiState.value = _uiState.value.copy(loading = false, dogs = response.data)
+                    }
                 }
             }
         }

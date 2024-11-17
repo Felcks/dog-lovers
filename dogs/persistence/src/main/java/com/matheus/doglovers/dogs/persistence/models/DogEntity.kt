@@ -11,4 +11,5 @@ data class DogEntity(
     @PrimaryKey @ColumnInfo(name = "imageUrl") override val imageUrl: String,
     @Embedded override val breed: BreedEntity,
     @ColumnInfo(name = "isFavorite") override val isFavorite: Boolean,
+    @ColumnInfo(name = "userEmail") override val userEmail: String
 ) : Dog

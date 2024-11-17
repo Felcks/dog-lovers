@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 class RemoveFavoriteDogUseCaseImpl(
     private val repository: DogsRepository
 ) : RemoveFavoriteDogUseCase {
-    override suspend fun invoke(dog: Dog): Flow<Resource<Dog>> {
-        return repository.removeFavoriteDog(dog)
+    override suspend fun invoke(dog: Dog, userEmail: String): Flow<Resource<Dog>> {
+        return repository.removeFavoriteDog(dog, userEmail)
     }
 }

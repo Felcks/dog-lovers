@@ -10,23 +10,23 @@ import kotlinx.coroutines.flow.flow
 class DogsLocalDataSourceImpl(
     private val appDatabase: AppDatabase,
 ) : DogsLocalDataSource {
-    override fun saveDog(dog: Dog): Flow<Dog> {
+    override fun saveDog(dog: Dog, userEmail: String): Flow<Dog> {
         return flow {
-            val entityDog = dog.toEntity().copy(isFavorite = true)
+            val entityDog = dog.toEntity().copy(isFavorite = true, userEmail = userEmail)
             appDatabase.favoriteDogsDao().insertAll(entityDog)
             emit(entityDog)
         }
     }
 
-    override fun removeDog(dog: Dog): Flow<Dog> {
+    override fun removeDog(dog: Dog, userEmail: String): Flow<Dog> {
         return flow {
-            val entityDog = dog.toEntity().copy(isFavorite = false)
+            val entityDog = dog.toEntity().copy(isFavorite = false, userEmail = userEmail)
             appDatabase.favoriteDogsDao().insertAll(entityDog)
             emit(entityDog)
         }
     }
 
-    override fun getFavoriteDogs(): Flow<List<Dog>> {
-        return appDatabase.favoriteDogsDao().getFavorites()
+    override fun getFavoriteDogs(userEmail: String): Flow<List<Dog>> {
+        return appDatabase.favoriteDogsDao().getFavorites(userEmail)
     }
 }

@@ -8,6 +8,7 @@ fun Dog.toEntity() : DogEntity {
     return DogEntity(
         imageUrl = imageUrl,
         breed = breed.toEntity(),
-        isFavorite = isFavorite
+        isFavorite = isFavorite,
+        userEmail = userEmail
     )
 }

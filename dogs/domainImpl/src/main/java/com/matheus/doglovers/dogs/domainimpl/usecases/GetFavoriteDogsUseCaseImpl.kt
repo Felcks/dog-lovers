@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class GetFavoriteDogsUseCaseImpl(
     private val repository: DogsRepository
 ) : GetFavoriteDogsUseCase {
-    override suspend fun invoke(): Flow<Resource<List<Dog>>> {
-        return repository.getFavoriteDogs()
+    override suspend fun invoke(userEmail: String): Flow<Resource<List<Dog>>> {
+        return repository.getFavoriteDogs(userEmail)
     }
 }

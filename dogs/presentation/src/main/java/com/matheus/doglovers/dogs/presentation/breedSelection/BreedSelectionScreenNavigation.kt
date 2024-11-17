@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.google.firebase.auth.FirebaseUser
 
 const val BreedSelectionRoute = "breed_selection_navigation"
 
@@ -15,11 +16,12 @@ fun NavController.navigateToBreedSelectionScreen(
 }
 
 fun NavGraphBuilder.breedSelectionScreen(
+    firebaseUser: FirebaseUser,
     modifier: Modifier = Modifier,
 ) {
     composable(
         BreedSelectionRoute
     ) {
-        BreedSelectionScreen(modifier)
+        BreedSelectionScreen(firebaseUser, modifier)
     }
 }

@@ -37,7 +37,8 @@ class DogsRemoteDataSourceImpl(
                 DogResponse(
                     breed = breed,
                     imageUrl = it.orEmpty(),
-                    isFavorite = false
+                    isFavorite = false,
+                    userEmail = ""
                 )
             }
         }

@@ -5,5 +5,5 @@ import com.matheus.doglovers.dogs.domain.models.Dog
 import kotlinx.coroutines.flow.Flow
 
 interface GetFavoriteDogsUseCase {
-    suspend operator fun invoke(): Flow<Resource<List<Dog>>>
+    suspend operator fun invoke(userEmail: String): Flow<Resource<List<Dog>>>
 }

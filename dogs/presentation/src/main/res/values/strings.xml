@@ -5,4 +5,6 @@
     <string name="dog_selection_screen_breed_dropdown_label">Select Dog breed from the list</string>
     <string name="dog_selection_screen_shuffle_button">Shuffle</string>
     <string name="my_favorite_screen_title">My Favourite dogs</string>
+    <string name="home_screen_breed_selection_tab">Selection</string>
+    <string name="home_screen_my_favorites_tab">My Favourites</string>
 </resources>

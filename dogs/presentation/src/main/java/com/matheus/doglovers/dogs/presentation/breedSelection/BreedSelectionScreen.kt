@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
@@ -33,7 +32,6 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,12 +55,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import coil.compose.SubcomposeAsyncImage
+import com.google.firebase.auth.FirebaseUser
 import com.matheus.doglovers.core.presentation.R
 import com.matheus.doglovers.core.presentation.theme.DogLoversTheme
 import com.matheus.doglovers.dogs.domain.models.Breed
 
 @Composable
 fun BreedSelectionScreen(
+    firebaseUser: FirebaseUser,
     modifier: Modifier = Modifier,
     viewModel: BreedSelectionViewModel = hiltViewModel()
 ) {
@@ -70,6 +70,7 @@ fun BreedSelectionScreen(
 
 
     LifecycleEventEffect(event = Lifecycle.Event.ON_CREATE) {
+        viewModel.handleScreenEvents(BreedSelectionEvent.SetUser(firebaseUser))
         viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds)
     }
 
@@ -77,7 +78,7 @@ fun BreedSelectionScreen(
         uiState = uiState,
         loadAllBreeds = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadAllBreeds) },
         onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
-        onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelecteBreed) },
+        onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelectedBreed) },
         onFavoriteClick = { viewModel.handleScreenEvents(BreedSelectionEvent.FavoriteOrUnfavoriteCurrentDog) },
         modifier = modifier.background(Color.Transparent)
     )

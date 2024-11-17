@@ -21,20 +21,20 @@ class DogsRepositoryImpl(
         return dogsRemoteDataSource.getRandomDog(breed)
     }
 
-    override suspend fun getFavoriteDogs(): Flow<Resource<List<Dog>>> {
-        return dogsLocalDataSource.getFavoriteDogs().map {
+    override suspend fun getFavoriteDogs(userEmail: String): Flow<Resource<List<Dog>>> {
+        return dogsLocalDataSource.getFavoriteDogs(userEmail).map {
             Resource.Success(it)
         }
     }
 
-    override suspend fun saveFavoriteDogs(dog: Dog): Flow<Resource<Dog>> {
-        return dogsLocalDataSource.saveDog(dog).map {
+    override suspend fun saveFavoriteDogs(dog: Dog, userEmail: String): Flow<Resource<Dog>> {
+        return dogsLocalDataSource.saveDog(dog, userEmail).map {
             Resource.Success(it)
         }
     }
 
-    override suspend fun removeFavoriteDog(dog: Dog): Flow<Resource<Dog>> {
-        return dogsLocalDataSource.removeDog(dog).map {
+    override suspend fun removeFavoriteDog(dog: Dog, userEmail: String): Flow<Resource<Dog>> {
+        return dogsLocalDataSource.removeDog(dog, userEmail).map {
             Resource.Success(it)
         }
     }

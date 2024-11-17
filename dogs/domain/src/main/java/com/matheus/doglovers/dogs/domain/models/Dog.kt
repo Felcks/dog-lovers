@@ -4,4 +4,5 @@ interface Dog {
     val breed: Breed
     val imageUrl: String
     val isFavorite: Boolean
+    val userEmail: String
 }

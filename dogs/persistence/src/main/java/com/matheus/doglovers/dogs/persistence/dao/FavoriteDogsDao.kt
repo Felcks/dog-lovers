@@ -12,8 +12,8 @@ interface FavoriteDogsDao {
     @Query("SELECT * FROM favorite_dogs")
     fun getAll(): Flow<List<DogEntity>>
 
-    @Query("SELECT * FROM favorite_dogs WHERE isFavorite IS 1")
-    fun getFavorites(): Flow<List<DogEntity>>
+    @Query("SELECT * FROM favorite_dogs WHERE isFavorite IS 1 AND userEmail = :userEmail")
+    fun getFavorites(userEmail: String): Flow<List<DogEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg dogs: DogEntity) : Unit

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class SaveFavoriteDogUseCaseImpl(
     private val repository: DogsRepository
 ) : SaveFavoriteDogUseCase {
-    override suspend fun invoke(dog: Dog): Flow<Resource<Dog>> {
-        return repository.saveFavoriteDogs(dog)
+    override suspend fun invoke(dog: Dog, userEmail: String): Flow<Resource<Dog>> {
+        return repository.saveFavoriteDogs(dog, userEmail)
     }
 }

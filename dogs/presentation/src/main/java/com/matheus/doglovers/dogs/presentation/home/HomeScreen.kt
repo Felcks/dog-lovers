@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,8 +61,8 @@ fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val topLevelRoutes = listOf(
-        TopLevelRoute("Selection", BreedSelectionRoute, ImageVector.vectorResource(R.drawable.ic_dog)),
-        TopLevelRoute("My Favourites", FavoriteScreenRoute, Icons.Default.Star)
+        TopLevelRoute(stringResource(R.string.home_screen_breed_selection_tab), BreedSelectionRoute, ImageVector.vectorResource(R.drawable.ic_dog)),
+        TopLevelRoute(stringResource(R.string.home_screen_my_favorites_tab), FavoriteScreenRoute, Icons.Default.Star)
     )
 
     var navigationSelectedItem by remember {
@@ -81,7 +82,6 @@ fun HomeScreen(
             onLogout.invoke()
         }
     }
-
 
     Scaffold(
         bottomBar = {
@@ -150,15 +150,20 @@ fun HomeScreen(
                 }
             }
 
-            NavHost(
-                navController = navController,
-                startDestination = BreedSelectionRoute,
-                modifier = modifier.fillMaxSize()
-            ) {
-                breedSelectionScreen(
-                    modifier = Modifier.fillMaxSize()
-                )
-                favoriteListScreen()
+            uiState.user?.let {
+                NavHost(
+                    navController = navController,
+                    startDestination = BreedSelectionRoute,
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    breedSelectionScreen(
+                        firebaseUser = it,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    favoriteListScreen(
+                        firebaseUser = it
+                    )
+                }
             }
         }
     }
