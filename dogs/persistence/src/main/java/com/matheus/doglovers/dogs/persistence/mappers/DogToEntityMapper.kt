@@ -7,6 +7,7 @@ import com.matheus.doglovers.dogs.persistence.models.DogEntity
 fun Dog.toEntity() : DogEntity {
     return DogEntity(
         imageUrl = imageUrl,
-        breed = breed.toEntity()
+        breed = breed.toEntity(),
+        isFavorite = isFavorite
     )
 }

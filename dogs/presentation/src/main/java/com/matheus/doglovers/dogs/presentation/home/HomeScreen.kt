@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -103,12 +104,13 @@ fun HomeScreen(
                     .height(24.dp)
                     .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
+                Spacer(Modifier)
+                /*Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
-                )
+                )*/
                 IconButton(
                     onClick = onLogout,
                     modifier = Modifier.size(24.dp)

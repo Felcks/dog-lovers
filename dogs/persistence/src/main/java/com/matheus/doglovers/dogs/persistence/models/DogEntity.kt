@@ -10,4 +10,5 @@ import com.matheus.doglovers.dogs.domain.models.Dog
 data class DogEntity(
     @PrimaryKey @ColumnInfo(name = "imageUrl") override val imageUrl: String,
     @Embedded override val breed: BreedEntity,
+    @ColumnInfo(name = "isFavorite") override val isFavorite: Boolean,
 ) : Dog

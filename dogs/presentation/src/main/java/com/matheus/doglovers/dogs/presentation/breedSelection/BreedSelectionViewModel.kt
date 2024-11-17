@@ -9,6 +9,7 @@ import com.matheus.doglovers.core.domain.wrapper.Resource
 import com.matheus.doglovers.dogs.domain.models.Breed
 import com.matheus.doglovers.dogs.domain.usecases.GetRandomDogUseCase
 import com.matheus.doglovers.dogs.domain.usecases.ListBreedsUseCase
+import com.matheus.doglovers.dogs.domain.usecases.RemoveFavoriteDogUseCase
 import com.matheus.doglovers.dogs.domain.usecases.SaveFavoriteDogUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ class BreedSelectionViewModel @Inject constructor(
     private val listBreedsUseCase: ListBreedsUseCase,
     private val getRandomDogUseCase: GetRandomDogUseCase,
     private val saveFavoriteDogUseCase: SaveFavoriteDogUseCase,
+    private val removeFavoriteDogUseCase: RemoveFavoriteDogUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<BreedSelectionUIState> = MutableStateFlow(BreedSelectionUIState())
@@ -41,13 +43,7 @@ class BreedSelectionViewModel @Inject constructor(
 
             BreedSelectionEvent.ShuffleImageForSelecteBreed -> _uiState.value.selectedBreed?.let { loadRandomDogImage(it) }
             BreedSelectionEvent.Signout -> signout()
-            BreedSelectionEvent.SaveCurrentDogAsFavorite -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    uiState.value.currentDog?.let {
-                        saveFavoriteDogUseCase.invoke(it).firstOrNull()
-                    }
-                }
-            }
+            BreedSelectionEvent.FavoriteOrUnfavoriteCurrentDog -> favOrUnfavCurrentDog()
         }
     }
 
@@ -84,6 +80,23 @@ class BreedSelectionViewModel @Inject constructor(
                     Resource.Loading -> _uiState.value = _uiState.value.copy(loading = true, currentDog = null)
                     is Resource.Success -> _uiState.value = _uiState.value.copy(loading = false, currentDog = it.data)
                 }
+            }
+        }
+    }
+
+    private fun favOrUnfavCurrentDog() {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.value.currentDog?.let {
+               val result = if(!it.isFavorite) {
+                    saveFavoriteDogUseCase.invoke(it).firstOrNull()
+                } else {
+                    removeFavoriteDogUseCase.invoke(it).firstOrNull()
+                }
+
+                if(result is Resource.Success) {
+                    _uiState.value = _uiState.value.copy(currentDog = result.data)
+                }
+
             }
         }
     }

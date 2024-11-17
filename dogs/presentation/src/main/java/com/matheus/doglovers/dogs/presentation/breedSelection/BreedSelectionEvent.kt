@@ -8,5 +8,5 @@ sealed class BreedSelectionEvent {
     data class LoadRandomDogImage(val breed: Breed) : BreedSelectionEvent()
     data object ShuffleImageForSelecteBreed : BreedSelectionEvent()
     data object Signout : BreedSelectionEvent()
-    data object SaveCurrentDogAsFavorite : BreedSelectionEvent()
+    data object FavoriteOrUnfavoriteCurrentDog : BreedSelectionEvent()
 }

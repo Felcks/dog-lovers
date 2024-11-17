@@ -36,7 +36,8 @@ class DogsRemoteDataSourceImpl(
             dogsService.getRandomDog(breed.getResourceName()).body()?.message.let {
                 DogResponse(
                     breed = breed,
-                    imageUrl = it.orEmpty()
+                    imageUrl = it.orEmpty(),
+                    isFavorite = false
                 )
             }
         }

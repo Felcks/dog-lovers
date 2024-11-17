@@ -5,5 +5,6 @@ import com.matheus.doglovers.dogs.domain.models.Dog
 
 class DogResponse(
     override val breed: Breed,
-    override val imageUrl: String
+    override val imageUrl: String,
+    override val isFavorite: Boolean
 ) : Dog
