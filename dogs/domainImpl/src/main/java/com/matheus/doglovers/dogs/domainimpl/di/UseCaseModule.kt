@@ -4,9 +4,11 @@ import com.matheus.doglovers.dogs.domain.repositories.DogsRepository
 import com.matheus.doglovers.dogs.domain.usecases.GetFavoriteDogsUseCase
 import com.matheus.doglovers.dogs.domain.usecases.GetRandomDogUseCase
 import com.matheus.doglovers.dogs.domain.usecases.ListBreedsUseCase
+import com.matheus.doglovers.dogs.domain.usecases.SaveFavoriteDogUseCase
 import com.matheus.doglovers.dogs.domainimpl.usecases.GetFavoriteDogsUseCaseImpl
 import com.matheus.doglovers.dogs.domainimpl.usecases.GetRandomDogUseCaseImpl
 import com.matheus.doglovers.dogs.domainimpl.usecases.ListBreedsUseCaseImpl
+import com.matheus.doglovers.dogs.domainimpl.usecases.SaveFavoriteDogUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +40,13 @@ object UseCaseModule {
         dogsRepository: DogsRepository
     ): GetFavoriteDogsUseCase {
         return GetFavoriteDogsUseCaseImpl(dogsRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSaveFavoriteDogUseCase(
+        dogsRepository: DogsRepository
+    ): SaveFavoriteDogUseCase {
+        return SaveFavoriteDogUseCaseImpl(dogsRepository)
     }
 }

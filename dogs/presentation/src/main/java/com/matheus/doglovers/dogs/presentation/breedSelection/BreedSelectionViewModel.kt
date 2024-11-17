@@ -9,10 +9,12 @@ import com.matheus.doglovers.core.domain.wrapper.Resource
 import com.matheus.doglovers.dogs.domain.models.Breed
 import com.matheus.doglovers.dogs.domain.usecases.GetRandomDogUseCase
 import com.matheus.doglovers.dogs.domain.usecases.ListBreedsUseCase
+import com.matheus.doglovers.dogs.domain.usecases.SaveFavoriteDogUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class BreedSelectionViewModel @Inject constructor(
     private val listBreedsUseCase: ListBreedsUseCase,
     private val getRandomDogUseCase: GetRandomDogUseCase,
+    private val saveFavoriteDogUseCase: SaveFavoriteDogUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<BreedSelectionUIState> = MutableStateFlow(BreedSelectionUIState())
@@ -38,6 +41,13 @@ class BreedSelectionViewModel @Inject constructor(
 
             BreedSelectionEvent.ShuffleImageForSelecteBreed -> _uiState.value.selectedBreed?.let { loadRandomDogImage(it) }
             BreedSelectionEvent.Signout -> signout()
+            BreedSelectionEvent.SaveCurrentDogAsFavorite -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    uiState.value.currentDog?.let {
+                        saveFavoriteDogUseCase.invoke(it).firstOrNull()
+                    }
+                }
+            }
         }
     }
 

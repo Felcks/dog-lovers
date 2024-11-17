@@ -1,15 +1,17 @@
 package com.matheus.doglovers.dogs.domainimpl.repositories
 
 import com.matheus.doglovers.core.domain.wrapper.Resource
+import com.matheus.doglovers.dogs.domain.datasources.DogsLocalDataSource
 import com.matheus.doglovers.dogs.domain.datasources.DogsRemoteDataSource
 import com.matheus.doglovers.dogs.domain.models.Breed
 import com.matheus.doglovers.dogs.domain.models.Dog
 import com.matheus.doglovers.dogs.domain.repositories.DogsRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 class DogsRepositoryImpl(
-    private val dogsRemoteDataSource: DogsRemoteDataSource
+    private val dogsRemoteDataSource: DogsRemoteDataSource,
+    private val dogsLocalDataSource: DogsLocalDataSource,
 ): DogsRepository {
     override suspend fun getBreeds(): Flow<Resource<List<Breed>>> {
         return dogsRemoteDataSource.getBreeds()
@@ -20,7 +22,24 @@ class DogsRepositoryImpl(
     }
 
     override suspend fun getFavoriteDogs(): Flow<Resource<List<Dog>>> {
-        return flowOf(Resource.Success(
+        return dogsLocalDataSource.getFavoriteDogs().map {
+            Resource.Success(it)
+        }
+    }
+
+    override suspend fun saveFavoriteDogs(dog: Dog): Flow<Resource<Boolean>> {
+        return dogsLocalDataSource.saveDog(dog).map {
+            if(it) {
+                Resource.Success(true)
+            } else {
+                Resource.Error("Fail")
+            }
+        }
+    }
+
+
+    /*
+    return flowOf(Resource.Success(
             listOf(
                 object : Dog {
                     override val breed: Breed
@@ -48,5 +67,5 @@ class DogsRepositoryImpl(
                 }
             )
         ))
-    }
+     */
 }

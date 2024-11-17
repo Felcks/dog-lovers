@@ -2,6 +2,7 @@ package com.matheus.doglovers.dogs.presentation.breedSelection
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,6 +91,7 @@ fun BreedSelectionScreen(
         onBreedSelected = { viewModel.handleScreenEvents(BreedSelectionEvent.LoadRandomDogImage(it)) },
         onShuffleClick = { viewModel.handleScreenEvents(BreedSelectionEvent.ShuffleImageForSelecteBreed) },
         onSignoutClick = { viewModel.handleScreenEvents(BreedSelectionEvent.Signout) },
+        onFavoriteClick = { viewModel.handleScreenEvents(BreedSelectionEvent.SaveCurrentDogAsFavorite) },
         modifier = modifier.background(Color.Transparent)
     )
 }
@@ -101,6 +103,7 @@ fun BreedSelectionScreenContent(
     onBreedSelected: (Breed) -> Unit,
     onShuffleClick: () -> Unit,
     onSignoutClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -199,6 +202,9 @@ fun BreedSelectionScreenContent(
                                         .fillMaxWidth()
                                         .heightIn(max = 175.dp)
                                         .clip(CircleShape.copy(all = CornerSize(16.dp)))
+                                        .clickable {
+                                            onFavoriteClick.invoke()
+                                        }
                                 )
                             }
 
@@ -304,6 +310,7 @@ private fun BreedSelectionScreenContentPreview() {
                     },
                 ),
             ),
+            {},
             {},
             {},
             {},

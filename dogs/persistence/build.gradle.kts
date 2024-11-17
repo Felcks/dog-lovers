@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.matheus.doglovers.dogs.domainimpl"
+    namespace = "com.matheus.doglovers.dogs.persistence"
     compileSdk = 34
 
     defaultConfig {
@@ -39,6 +39,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
@@ -47,11 +48,17 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation (libs.androidx.paging.runtime)
+    testImplementation (libs.androidx.paging.common)
+    implementation (libs.androidx.paging.compose)
+
     implementation(libs.mockk)
     implementation(libs.coroutines.test)
     implementation(libs.turbine)
 
-    implementation(project(":core:domain"))
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.annotation.processor)
+
     implementation(project(":dogs:domain"))
-    implementation(project(":dogs:persistence"))
 }

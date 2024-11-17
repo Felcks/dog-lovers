@@ -1,5 +1,6 @@
 package com.matheus.doglovers.dogs.domainimpl.di
 
+import com.matheus.doglovers.dogs.domain.datasources.DogsLocalDataSource
 import com.matheus.doglovers.dogs.domain.datasources.DogsRemoteDataSource
 import com.matheus.doglovers.dogs.domain.repositories.DogsRepository
 import com.matheus.doglovers.dogs.domainimpl.repositories.DogsRepositoryImpl
@@ -15,8 +16,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDogsRepository(
-        dogsRemoteDataSource: DogsRemoteDataSource
+        dogsRemoteDataSource: DogsRemoteDataSource,
+        dogsLocalDataSource: DogsLocalDataSource,
     ): DogsRepository {
-        return DogsRepositoryImpl(dogsRemoteDataSource)
+        return DogsRepositoryImpl(dogsRemoteDataSource, dogsLocalDataSource)
     }
 }
